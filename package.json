@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc && node dist/index.js",
+    "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,6 +19,8 @@
   },
   "homepage": "https://github.com/mallorcabootcamp/codos-app-backend#readme",
   "devDependencies": {
+    "i": "^0.3.6",
+    "ts-node-dev": "^1.0.0",
     "typescript": "^4.0.3"
   },
   "dependencies": {
