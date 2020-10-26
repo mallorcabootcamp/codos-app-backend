@@ -1,10 +1,11 @@
 {
     "name": "codos-app-backend",
     "version": "1.0.0",
+    "description": "",
     "main": "index.js",
     "scripts": {
-        "start:dev": "nodemon src ",
-        "start": "tsc && nodemon dist/index.js",
+        "start": "tsc && node dist/index.js",
+        "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
@@ -18,14 +19,14 @@
     },
     "homepage": "https://github.com/mallorcabootcamp/codos-app-backend#readme",
     "devDependencies": {
+        "ts-node-dev": "^1.0.0",
         "typescript": "^4.0.3"
     },
     "dependencies": {
         "@types/node": "^14.14.2",
         "cors": "^2.8.5",
         "dotenv": "^8.2.0",
-        "express": "^4.17.1"
-    },
-    "keywords": [],
-    "description": ""
+        "express": "^4.17.1",
+        "mqtt": "^4.2.1"
+    }
 }
