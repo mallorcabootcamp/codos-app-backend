@@ -1,7 +1,7 @@
-import mqtt from 'mqtt';
+import {connect} from 'mqtt';
 import { mqttOnRecive } from './mqttOnRecive';
 
-const client = mqtt.connect('mqtt://broker.hivemq.com')
+const client = connect('mqtt://broker.hivemq.com')
 const topic = 'mallorcabootcampdemo'
 
 export const mqttOnConnect = () => {
