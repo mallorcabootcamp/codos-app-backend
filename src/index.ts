@@ -1,3 +1,3 @@
-import { onConnect } from './mqtt/mqttOnConnect';
+import { mqttOnConnect } from './mqtt/mqttOnConnect';
 
-onConnect();
+mqttOnConnect();
