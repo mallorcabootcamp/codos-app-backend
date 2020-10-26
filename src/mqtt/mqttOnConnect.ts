@@ -6,11 +6,7 @@ const topic = 'mallorcabootcampdemo'
 
 export const mqttOnConnect = () => {
   client.on('connect', () => {
-    client.subscribe(topic, (err) => {
-      if (!err) {
-        mqttOnRecive(client);
-      }
-    })
+    client.subscribe(topic, (err) => !err && mqttOnRecive(client))
   })
 }
 
