@@ -1,6 +1,6 @@
 export function onGetTemperatureData(data:any) {
-
-    const values = data.values.map((e:any) => { return {temperature: e[3]}});
+    const temperatureIndex = 3;
+    const values = data.values.map((e:any) => { return {temperature: e[temperatureIndex]}});
     console.log(values);
     return values;
 }
