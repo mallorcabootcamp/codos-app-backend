@@ -18,10 +18,16 @@ app.use('/', require('./routes/prueba'));
 
 
 app.listen(process.env.PORT, () => {
-     const onConnect = new influxDBService(url, token, db);
-     onConnect.connect();
-     onConnect.getCo2Data();
+     onTry();
      mqttOnConnect();
      console.log('Conectado al puerto ' + process.env.PORT);
 });
 
+async function onTry() {
+     const onConnect = new influxDBService(url, token, db);
+     await onConnect.connect().then(() => {
+          onConnect.getCo2Data()
+          onConnect.getTemperatureData()
+          onConnect.getHumidityData()
+     })
+}

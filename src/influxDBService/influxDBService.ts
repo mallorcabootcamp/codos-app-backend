@@ -17,22 +17,22 @@ export class influxDBService {
 
     async connect(){
         const data = await influxDbOnConnect(this.url, this.token, this.db);
+        this.data = data;
+    }
+
+    getCo2Data(){
+        const data = onGetCo2Data(this.data);
         return data;
     }
 
-    async getCo2Data(){
-        const data = onGetCo2Data(await this.connect());
-        return data;
-    }
-
-    async getTemperatureData(){
-        const data = onGetTemperatureData(await this.connect());
+    getTemperatureData(){
+        const data = onGetTemperatureData(this.data);
         return data;
 
     }
 
-    async getHumidityData(){
-        const data = onGetHumidityData(await this.connect());
+    getHumidityData(){
+        const data = onGetHumidityData(this.data);
         return data;
     }
 
