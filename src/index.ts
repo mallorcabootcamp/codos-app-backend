@@ -24,7 +24,7 @@ app.listen(process.env.PORT, () => {
 });
 
 async function onTry() {
-     const onConnect = new influxDBService(url, token, db);
+     const onConnect = influxDBService.getInstance();
      await onConnect.connect().then(() => {
           const co2Data = onConnect.getCo2Data()
           onConnect.getTemperatureData()
