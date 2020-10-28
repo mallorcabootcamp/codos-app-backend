@@ -47,24 +47,19 @@ export class influxDBService {
     }
 
     getCo2Data(): objectValues[] {
-        const data = onGetCo2Data(this.data);
-        return data;
+        return onGetCo2Data(this.data);
     }
 
     getTemperatureData(): objectValues[] {
-        const data = onGetTemperatureData(this.data);
-        return data;
-
+        return onGetTemperatureData(this.data);
     }
 
     getHumidityData():objectValues[] {
-        const data = onGetHumidityData(this.data);
-        return data;
+        return onGetHumidityData(this.data);
     }
 
     getDataFromDateToDate(dataFrom:objectValues, dataTo: objectValues, value: objectValues[]):objectValues[] {
-        const data = onGetDataFromDateToDate(dataFrom, dataTo, value);
-        return data;
+        return onGetDataFromDateToDate(dataFrom, dataTo, value);
     }
 
 }

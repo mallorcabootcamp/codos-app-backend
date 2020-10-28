@@ -10,7 +10,7 @@ export async function influxDbOnConnect(url:string, token:string, db:string, use
       url: url,
       timeout: 1000,
       params: {
-        q: `SELECT * FROM ${user} LIMIT 5`,
+        q: `SELECT * FROM ${user} LIMIT 20`,
         db: db
       },
       headers: { 'Authorization': token }
