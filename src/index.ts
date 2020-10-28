@@ -29,6 +29,6 @@ async function onTry() {
           const co2Data = onConnect.getCo2Data()
           onConnect.getTemperatureData()
           onConnect.getHumidityData()
-          onConnect.getDataFromDateToDate({ date: '2020-10-13T19:42:06.784456438Z', eCo2: 518 }, { date: '2020-10-13T19:48:13.052937184Z', eCo2: 774 }, co2Data);
+          onConnect.getDataFromDateToDate({ date: '2020-10-13T19:42:06.784456438Z' }, { date: '2020-10-13T19:48:13.052937184Z' }, co2Data);
      })
 }
