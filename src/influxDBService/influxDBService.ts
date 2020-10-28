@@ -42,8 +42,7 @@ export class influxDBService {
     }
 
     async connect() {
-        const data = await influxDbOnConnect(this.url, this.token, this.db, this.user);
-        this.data = data;
+        this.data = await influxDbOnConnect(this.url, this.token, this.db, this.user);
     }
 
     getCo2Data(): objectValues[] {
