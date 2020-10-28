@@ -6,15 +6,16 @@ import { onGetDataFromDateToDate } from './functions/onGetDataFromDateToDate';
 import { config } from 'dotenv';
 config();
 
-const url: any = process.env.INFLUX_URL;
-const token: any = process.env.INFLUX_TOKEN;
-const db: any = process.env.INFLUX_DB;
+const url: string | undefined = process.env.INFLUX_URL;
+const token: string | undefined = process.env.INFLUX_TOKEN;
+const db: string | undefined = process.env.INFLUX_DB;
+const user: string = '"@erguro1973"';
 
-interface objectValues {
-
+export interface objectValues {
     date: string,
-    eCo2: number
-
+    eCo2?: number,
+    temperature?:number,
+    humidity?:number
 }
 
 export class influxDBService {
@@ -22,7 +23,9 @@ export class influxDBService {
     private url: any;
     private token: any;
     private db: any;
+    private user: any;
     private data: any;
+    
 
     private constructor() {
     }
@@ -33,32 +36,33 @@ export class influxDBService {
             influxDBService.instance.url = url;
             influxDBService.instance.token = token;
             influxDBService.instance.db = db;
+            influxDBService.instance.user = user;
         }
         return influxDBService.instance;
     }
 
     async connect() {
-        const data = await influxDbOnConnect(this.url, this.token, this.db);
+        const data = await influxDbOnConnect(this.url, this.token, this.db, this.user);
         this.data = data;
     }
 
-    getCo2Data() {
+    getCo2Data(): objectValues[] {
         const data = onGetCo2Data(this.data);
         return data;
     }
 
-    getTemperatureData() {
+    getTemperatureData(): objectValues[] {
         const data = onGetTemperatureData(this.data);
         return data;
 
     }
 
-    getHumidityData() {
+    getHumidityData():objectValues[] {
         const data = onGetHumidityData(this.data);
         return data;
     }
 
-    getDataFromDateToDate(dataFrom: objectValues, dataTo: objectValues, value: objectValues[]) {
+    getDataFromDateToDate(dataFrom:objectValues, dataTo: objectValues, value: objectValues[]):objectValues[] {
         const data = onGetDataFromDateToDate(dataFrom, dataTo, value);
         return data;
     }

@@ -1,11 +1,6 @@
-interface objectValues{
+import { objectValues } from '../../influxDBService/influxDBService';
 
-    date:string,
-    eCo2:number
-
-}
-
-export function onGetDataFromDateToDate(dataFrom:objectValues, dataTo:objectValues, value:objectValues[]): Object[] {
+export function onGetDataFromDateToDate(dataFrom:objectValues, dataTo:objectValues, value:objectValues[]): objectValues[] {
     const values = value.filter((e:objectValues) => e.date >= dataFrom.date && e.date <= dataTo.date);
     console.log(values);
     return values;
