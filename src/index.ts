@@ -26,8 +26,9 @@ app.listen(process.env.PORT, () => {
 async function onTry() {
      const onConnect = new influxDBService(url, token, db);
      await onConnect.connect().then(() => {
-          onConnect.getCo2Data()
+          const co2Data = onConnect.getCo2Data()
           onConnect.getTemperatureData()
           onConnect.getHumidityData()
+          onConnect.getDataFromDateToDate({ date: '2020-10-13T19:42:06.784456438Z', eCo2: 518 }, { date: '2020-10-13T19:48:13.052937184Z', eCo2: 774 }, co2Data);
      })
 }

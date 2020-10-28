@@ -2,6 +2,14 @@ import { influxDbOnConnect } from '../influxdb/influxdb';
 import { onGetCo2Data } from './functions/onGetCo2Data';
 import { onGetTemperatureData } from './functions/onGetTemperatureData';
 import { onGetHumidityData } from './functions/onGetHumidityData';
+import { onGetDataFromDateToDate } from './functions/onGetDataFromDateToDate';
+
+interface objectValues{
+
+    date:string,
+    eCo2:number
+
+}
 
 export class influxDBService {
     url:any;
@@ -34,6 +42,10 @@ export class influxDBService {
     getHumidityData(){
         const data = onGetHumidityData(this.data);
         return data;
+    }
+
+    getDataFromDateToDate(dataFrom: objectValues, dataTo: objectValues, value:objectValues[]){
+        const data = onGetDataFromDateToDate(dataFrom, dataTo, value);
     }
 
 }
