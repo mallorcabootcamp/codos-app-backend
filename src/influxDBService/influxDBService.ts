@@ -3,62 +3,62 @@ import { onGetCo2Data } from './functions/onGetCo2Data';
 import { onGetTemperatureData } from './functions/onGetTemperatureData';
 import { onGetHumidityData } from './functions/onGetHumidityData';
 import { onGetDataFromDateToDate } from './functions/onGetDataFromDateToDate';
-import { config } from 'dotenv';
-config();
+import axios from 'axios';
+import { InfluxDbApiResponse } from './InfluxDbApiResponse';
 
-const url: string | undefined = process.env.INFLUX_URL;
-const token: string | undefined = process.env.INFLUX_TOKEN;
-const db: string | undefined = process.env.INFLUX_DB;
-const user: string = '"@erguro1973"';
-
-export interface objectValues {
-    date: string,
-    eCo2?: number,
-    temperature?:number,
-    humidity?:number
+export interface DataResponse {
+    time: string,
+    Sensor: number,
+    TV?: number,
+    humidity?: number
 }
 
-export class influxDBService {
-    private static instance: influxDBService;
-    private url: any;
-    private token: any;
-    private db: any;
-    private user: any;
-    private data: any;
-    
+export class InfluxDBService {
 
-    private constructor() {
+    constructor(
+        private url: string,
+        private token: string,
+        private db: string,
+        private user: string
+    ) { }
+
+    async getCo2Data(fromDate?: string, toDate?: string): any {
+        const data = await this.getData();
+        let a = data;
+        // return only co2 data
     }
 
-    static getInstance() {
-        if (!influxDBService.instance) {
-            influxDBService.instance = new influxDBService();
-            influxDBService.instance.url = url;
-            influxDBService.instance.token = token;
-            influxDBService.instance.db = db;
-            influxDBService.instance.user = user;
-        }
-        return influxDBService.instance;
+    getTemperatureData(fromDate: string, toDate: string): ObjectValues[] {
+        const data = await this.getData();
+        let a = data;
+        // return only temp data
     }
 
-    async connect() {
-        this.data = await influxDbOnConnect(this.url, this.token, this.db, this.user);
+    getHumidityData(fromDate: string, toDate: string): ObjectValues[] {
+        const data = await this.getData();
+        let a = data;
+        // return only hum data
     }
 
-    getCo2Data(): objectValues[] {
-        return onGetCo2Data(this.data);
-    }
-
-    getTemperatureData(): objectValues[] {
-        return onGetTemperatureData(this.data);
-    }
-
-    getHumidityData():objectValues[] {
-        return onGetHumidityData(this.data);
-    }
-
-    getDataFromDateToDate(dataFrom:objectValues, dataTo: objectValues, value: objectValues[]):objectValues[] {
-        return onGetDataFromDateToDate(dataFrom, dataTo, value);
+    private getData() {
+        return axios({
+            method: 'GET',
+            url: this.url,
+            timeout: 1000,
+            params: {
+                q: `SELECT * FROM ${this.user} LIMIT 20`,
+                db: this.db
+            },
+            headers: { 'Authorization': this.token }
+        }).then(response => {
+            const columns = (response.data as InfluxDbApiResponse).results[0].series[0].columns
+            return (response.data as InfluxDbApiResponse).results[0].series[0].values.map(value => {
+                return value.reduce((acc, val, idx) => {
+                    acc[columns[idx]] = val;
+                    return acc;
+                }, {})
+            })
+        })
     }
 
 }
