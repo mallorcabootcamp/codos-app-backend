@@ -1,9 +1,14 @@
-const probando = (req: any, res: any ) => {
+import  { Request, Response } from 'express';
+export const dataCO2 = (req: Request, res: Response ) => {
+
+     const fromDate = req.query.fromDate;
+     const toDate = req.query.toDate;
 
      try {
           res.json({
                ok: true,
-               msg: 'Hola mundo'
+               msg: 'Hola mundo desde CO2',
+               data: req.query
           });
      
      } catch(error) {
@@ -15,4 +20,3 @@ const probando = (req: any, res: any ) => {
      }
 };
 
-module.exports = probando;

@@ -1,8 +1,11 @@
-const express = require('express');
-const cors = require('cors');
+require('dotenv').config();
+
+import express from 'express';
+import cors from 'cors';
 import { mqttOnConnect } from './mqtt/mqttOnConnect';
 import { influxDbOnGet } from './influxdb/influxdb';
-require('dotenv').config();
+
+import { router } from './router';
 
 const app = express();
 
@@ -10,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 
-app.use('/', require('./routes/prueba'));
+app.use(router);
 
 
 app.listen(process.env.PORT, () => {
