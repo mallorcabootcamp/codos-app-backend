@@ -4,6 +4,8 @@ export const dataHumidity = (req: Request, res: Response ) => {
      const fromDate = req.query.fromDate;
      const toDate = req.query.toDate;
 
+     ServiceUIFrameContext.getCo2Data()
+
      try {
           res.json({
                ok: true,
