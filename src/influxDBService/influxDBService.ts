@@ -25,16 +25,17 @@ export class InfluxDBService {
     async getCo2Data(fromDate?: string, toDate?: string): any {
         const data = await this.getData();
         let a = data;
+        debugger;
         // return only co2 data
     }
 
-    getTemperatureData(fromDate: string, toDate: string): ObjectValues[] {
+    async getTemperatureData(fromDate: string, toDate: string): ObjectValues[] {
         const data = await this.getData();
         let a = data;
         // return only temp data
     }
 
-    getHumidityData(fromDate: string, toDate: string): ObjectValues[] {
+    async getHumidityData(fromDate: string, toDate: string): ObjectValues[] {
         const data = await this.getData();
         let a = data;
         // return only hum data
