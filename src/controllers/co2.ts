@@ -1,19 +1,15 @@
 import { Request, Response } from 'express';
-import { InfluxDBService } from '../influxDBService/influxDBService';
+import { InfluxDBService, Co2DataResponse } from '../influxDBService/influxDBService';
 
-const url: string | undefined = process.env.INFLUX_URL;
-const token: string | undefined = process.env.INFLUX_TOKEN;
-const db: string | undefined = process.env.INFLUX_DB;
-const user: string = '"@erguro1973"';
 
 export const dataCO2 = (req: Request, res: Response) => {
 
      const fromDate = req.query.fromDate;
      const toDate = req.query.toDate;
 
-     const instance = new InfluxDBService(url as string, token as string, db as string, user as string);
+     const instance = new InfluxDBService();
 
-     instance.getCo2Data().then((data => {
+     instance.getCo2Data(fromDate as string, toDate as string).then(((data: Co2DataResponse[]) => {
           try {
                res.json({
                     ok: true,
@@ -29,7 +25,5 @@ export const dataCO2 = (req: Request, res: Response) => {
                });
           }
      }))
-
-
 };
 
