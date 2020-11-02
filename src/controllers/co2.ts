@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { InfluxDBService, Co2DataResponse } from '../influxDBService/influxDBService';
-
+import moment from 'moment';
 
 export const dataCO2 = (req: Request, res: Response) => {
 
@@ -11,11 +11,10 @@ export const dataCO2 = (req: Request, res: Response) => {
 
      instance.getCo2Data(fromDate as string, toDate as string).then(((data: Co2DataResponse[]) => {
           try {
-               res.json({
-                    ok: true,
-                    msg: 'Hola mundo desde CO2',
-                    data: data
-               });
+               res.json(data.map((dataItem: any) => ({
+                    time: Math.round(moment(dataItem.time).valueOf()/1000).toString(),
+                    value: dataItem.co2
+               })));
 
           } catch (error) {
                console.log('ERROR: ', error);
