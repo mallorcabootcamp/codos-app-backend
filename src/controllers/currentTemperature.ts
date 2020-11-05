@@ -1,21 +1,19 @@
-import { Request, Response } from 'express';
-import { InfluxDBService, HumidityDataResponse } from '../influxDBService/influxDBService';
+import  { Request, Response } from 'express';
+import { InfluxDBService, TemperatureDataResponse } from '../influxDBService/influxDBService';
 import moment from 'moment';
 
-export const dataHumidity = (req: Request, res: Response ) => {
+export const currentTemperature = (req: Request, res: Response ) => {
 
-     const fromDate = req.query.fromDate;
-     const toDate = req.query.toDate;
      const user = req.query.user;
 
      const instance = new InfluxDBService();
 
-     instance.getHumidityData(user as string, fromDate as string, toDate as string).then(((data: HumidityDataResponse[]) => {
+     instance.getTemperatureData(user as string, undefined, undefined, 1).then(((data: TemperatureDataResponse[]) => {
 
           try {
                res.json(data.map((dataItem: any) => ({
                     time: Math.round(moment(dataItem.time).valueOf()/1000).toString(),
-                    value: dataItem.humidity
+                    value: dataItem.temperature
                })));
 
           } catch (error) {
