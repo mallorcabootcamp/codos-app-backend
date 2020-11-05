@@ -6,10 +6,11 @@ export const dataCO2 = (req: Request, res: Response) => {
 
      const fromDate = req.query.fromDate;
      const toDate = req.query.toDate;
+     const user = req.query.user;
 
      const instance = new InfluxDBService();
 
-     instance.getCo2Data(fromDate as string, toDate as string).then(((data: Co2DataResponse[]) => {
+     instance.getCo2Data(user as string, fromDate as string, toDate as string).then(((data: Co2DataResponse[]) => {
           try {
                res.json(data.map((dataItem: any) => ({
                     time: Math.round(moment(dataItem.time).valueOf()/1000).toString(),

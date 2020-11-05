@@ -2,15 +2,13 @@ import { Request, Response } from 'express';
 import { InfluxDBService, HumidityDataResponse } from '../influxDBService/influxDBService';
 import moment from 'moment';
 
-export const dataHumidity = (req: Request, res: Response ) => {
+export const currentHumidity = (req: Request, res: Response ) => {
 
-     const fromDate = req.query.fromDate;
-     const toDate = req.query.toDate;
      const user = req.query.user;
 
      const instance = new InfluxDBService();
 
-     instance.getHumidityData(user as string, fromDate as string, toDate as string).then(((data: HumidityDataResponse[]) => {
+     instance.getHumidityData(user as string, undefined, undefined, 1).then(((data: HumidityDataResponse[]) => {
 
           try {
                res.json(data.map((dataItem: any) => ({

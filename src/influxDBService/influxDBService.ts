@@ -5,7 +5,6 @@ import { InfluxDbApiResponse } from './InfluxDbApiResponse';
 const url: string | undefined = process.env.INFLUX_URL;
 const token: string | undefined = process.env.INFLUX_TOKEN;
 const db: string | undefined = process.env.INFLUX_DB;
-const user: string = '"@erguro1973"';
 
 
 export interface DataResponse {
@@ -34,25 +33,26 @@ export class InfluxDBService {
 
     constructor() { }
 
-    async getCo2Data(fromDate?: string, toDate?: string): Promise<Co2DataResponse[]> {
-        return this.getData().then((data: DataResponse[]) => data.map(({ time, co2 }: DataResponse) => ({ time, co2 })));
+    async getCo2Data(user: string, fromDate?: string, toDate?: string, limit?: number): Promise<Co2DataResponse[]> {
+        return this.getData(user, fromDate, toDate, limit).then((data: DataResponse[]) => data.map(({ time, co2 }: DataResponse) => ({ time, co2 })));
     }
 
-    async getTemperatureData(fromDate: string, toDate: string): Promise<TemperatureDataResponse[]> {
-        return this.getData().then((data: DataResponse[]) => data.map(({ time, temperature }: DataResponse) => ({ time, temperature })));
+    async getTemperatureData(user: string, fromDate?: string, toDate?: string, limit?: number): Promise<TemperatureDataResponse[]> {
+        return this.getData(user, fromDate, toDate, limit).then((data: DataResponse[]) => data.map(({ time, temperature }: DataResponse) => ({ time, temperature })));
     }
 
-    async getHumidityData(fromDate: string, toDate: string): Promise<HumidityDataResponse[]> {
-        return this.getData().then((data: DataResponse[]) => data.map(({ time, rh }: DataResponse) => ({ time, humidity: rh })));
+    async getHumidityData(user: string, fromDate?: string, toDate?: string, limit?: number): Promise<HumidityDataResponse[]> {
+        return this.getData(user, fromDate, toDate, limit).then((data: DataResponse[]) => data.map(({ time, rh }: DataResponse) => ({ time, humidity: rh })));
     }
 
-    private getData(): Promise<DataResponse[]> {
+    private getData(user: string, fromDate?: string, toDate?: string, limit?: number): Promise<DataResponse[]> {
+        console.log(user);
         return axios({
             method: 'GET',
             url: url,
             timeout: 1000,
             params: {
-                q: `SELECT * FROM ${user} LIMIT 20`,
+                q: getQuery(user, fromDate, toDate, limit),
                 db: db
             },
             headers: { 'Authorization': token }
@@ -74,4 +74,16 @@ export class InfluxDBService {
         })
     }
 
+}
+
+const getQuery = (user: string, fromDate?: string, toDate?: string, limit?: number) => {
+    let query = `SELECT * FROM "${user}"`;
+    console.log(query);
+    if(fromDate && toDate) {
+        query += ` where time >=${fromDate}s and time <${toDate}s`
+    }
+    if(limit) {
+        query += ` LIMIT ${limit}`
+    }
+    return query;
 }
