@@ -83,10 +83,10 @@ export class InfluxDBService {
 const getQuery = (user: string, fromDate?: string, toDate?: string, limit?: number) => {
     let query = `SELECT * FROM "${user}"`;
     if(fromDate && toDate) {
-        query += ` where time >=${fromDate}s and time <${toDate}s`
+        query += ` where time >=${fromDate}s and time <${toDate}s ORDER BY "time" DESC`
     }
     if(limit) {
-        query += ` LIMIT ${limit}`
+        query += ` ORDER BY "time" DESC LIMIT ${limit}`
     }
     return query;
 }
