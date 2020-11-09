@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
+import { usersList } from '../config'
 
 export const users = (req: Request, res: Response) => {
 
-     const userslist: any = [];
+     const userslist: any = usersList.usersObj;
 
           try {
               res.json({
