@@ -57,13 +57,17 @@ export class InfluxDBService {
             },
             headers: { 'Authorization': token }
         }).then(response => {
-            const columns = (response.data as InfluxDbApiResponse).results[0].series[0].columns
-            return (response.data as InfluxDbApiResponse).results[0].series[0].values.map(value => {
-                return value.reduce((acc, val, idx) => {
-                    acc[columns[idx]] = val;
-                    return acc;
-                }, {})
-            })
+            if(!response.data.results[0].series) {
+                return [];
+            } else {
+                const columns = (response.data as InfluxDbApiResponse).results[0].series[0].columns
+                return (response.data as InfluxDbApiResponse).results[0].series[0].values.map(value => {
+                    return value.reduce((acc, val, idx) => {
+                        acc[columns[idx]] = val;
+                        return acc;
+                    }, {})
+                })
+            }
         }).then((data: any[]) => {
             return data.map((dataItem: any) => ({
                 time: dataItem.time,
@@ -78,12 +82,11 @@ export class InfluxDBService {
 
 const getQuery = (user: string, fromDate?: string, toDate?: string, limit?: number) => {
     let query = `SELECT * FROM "${user}"`;
-    console.log(query);
     if(fromDate && toDate) {
-        query += ` where time >=${fromDate}s and time <${toDate}s`
+        query += ` where time >=${fromDate}s and time <${toDate}s ORDER BY "time" DESC`
     }
     if(limit) {
-        query += ` LIMIT ${limit}`
+        query += ` ORDER BY "time" DESC LIMIT ${limit}`
     }
     return query;
 }

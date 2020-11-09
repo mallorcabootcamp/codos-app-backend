@@ -9,6 +9,7 @@ import { currentCO2 } from './controllers/currentCo2';
 import { currentTemperature } from './controllers/currentTemperature';
 import { currentHumidity } from './controllers/currentHumidity';
 import { validationParamsData, validationParamsCurrent } from './middelwares/validation';
+import { users } from './controllers/users';
 
 export const router = Router();
 
@@ -19,3 +20,5 @@ router.get( '/data/humidity', validationParamsData, dataHumidity);
 router.get( '/current/co2', validationParamsCurrent, currentCO2 );
 router.get( '/current/temperature', validationParamsCurrent,  currentTemperature);
 router.get( '/current/humidity', validationParamsCurrent, currentHumidity);
+
+router.get('/users', users);
