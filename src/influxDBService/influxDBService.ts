@@ -1,7 +1,6 @@
 
 import axios from 'axios';
 import { InfluxDbApiResponse } from './InfluxDbApiResponse';
-import moment from 'moment';
 import { CalculateTimeScaleValue } from '../components/CalculateTimeScaleValue/CalculateTimeScaleValue';
 
 const url: string | undefined = process.env.INFLUX_URL;
@@ -73,9 +72,9 @@ export class InfluxDBService {
         }).then((data: any[]) => {
             return data.map((dataItem: any) => ({
                 time: dataItem.time,
-                co2: dataItem['mean_eCO2[ppm]'],
-                rh: dataItem['mean_rH[o/o]'],
-                temperature: dataItem['mean_T[°C]']
+                co2: isNaN(dataItem['eCO2[ppm]']) ? dataItem['mean_eCO2[ppm]'] : dataItem['eCO2[ppm]'],
+                rh: isNaN(dataItem['rH[o/o]']) ? dataItem['mean_rH[o/o]'] : dataItem['rH[o/o]'],
+                temperature: isNaN(dataItem['T[°C]']) ? dataItem['mean_T[°C]'] : dataItem['T[°C]']
             }))
         })
     }
@@ -83,8 +82,9 @@ export class InfluxDBService {
 }
 
 const getQuery = (user: string, fromDate?: string, toDate?: string, limit?: number) => {
-    let query = `SELECT MEAN(*) FROM "${user}"`;
+    let query = `SELECT * FROM "${user}"`;
     if(fromDate && toDate) {
+        query = `SELECT MEAN(*) FROM "${user}"`;
         const timeScaleValue = CalculateTimeScaleValue(fromDate, toDate);
         query += ` where time >=${fromDate}s and time <${toDate}s group by time(${timeScaleValue}) ORDER BY "time" DESC`;
     }
