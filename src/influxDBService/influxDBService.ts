@@ -2,6 +2,7 @@
 import axios from 'axios';
 import { InfluxDbApiResponse } from './InfluxDbApiResponse';
 import moment from 'moment';
+import { CalculateTimeScaleValue } from '../components/CalculateTimeScaleValue/CalculateTimeScaleValue';
 
 const url: string | undefined = process.env.INFLUX_URL;
 const token: string | undefined = process.env.INFLUX_TOKEN;
@@ -84,9 +85,7 @@ export class InfluxDBService {
 const getQuery = (user: string, fromDate?: string, toDate?: string, limit?: number) => {
     let query = `SELECT MEAN(*) FROM "${user}"`;
     if(fromDate && toDate) {
-        const timeRecivedDiference = parseInt(toDate) - parseInt(fromDate);
-        const threeDaysDiference = moment().valueOf()/1000 - moment().subtract(3, 'days').valueOf()/1000;
-        const timeScaleValue = timeRecivedDiference < threeDaysDiference ? "60m" : "1d";
+        const timeScaleValue = CalculateTimeScaleValue(fromDate, toDate);
         query += ` where time >=${fromDate}s and time <${toDate}s group by time(${timeScaleValue}) ORDER BY "time" DESC`;
     }
     if(limit) {
