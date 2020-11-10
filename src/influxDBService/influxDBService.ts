@@ -1,6 +1,7 @@
 
 import axios from 'axios';
 import { InfluxDbApiResponse } from './InfluxDbApiResponse';
+import moment from 'moment';
 
 const url: string | undefined = process.env.INFLUX_URL;
 const token: string | undefined = process.env.INFLUX_TOKEN;
@@ -71,9 +72,9 @@ export class InfluxDBService {
         }).then((data: any[]) => {
             return data.map((dataItem: any) => ({
                 time: dataItem.time,
-                co2: dataItem['eCO2[ppm]'],
-                rh: dataItem['rH[o/o]'],
-                temperature: dataItem['T[°C]']
+                co2: dataItem['mean_eCO2[ppm]'],
+                rh: dataItem['mean_rH[o/o]'],
+                temperature: dataItem['mean_T[°C]']
             }))
         })
     }
@@ -81,12 +82,15 @@ export class InfluxDBService {
 }
 
 const getQuery = (user: string, fromDate?: string, toDate?: string, limit?: number) => {
-    let query = `SELECT * FROM "${user}"`;
+    let query = `SELECT MEAN(*) FROM "${user}"`;
     if(fromDate && toDate) {
-        query += ` where time >=${fromDate}s and time <${toDate}s ORDER BY "time" DESC`
+        const timeRecivedDiference = parseInt(toDate) - parseInt(fromDate);
+        const threeDaysDiference = moment().valueOf()/1000 - moment().subtract(3, 'days').valueOf()/1000;
+        const timeScaleValue = timeRecivedDiference < threeDaysDiference ? "60m" : "1d";
+        query += ` where time >=${fromDate}s and time <${toDate}s group by time(${timeScaleValue}) ORDER BY "time" DESC`;
     }
     if(limit) {
-        query += ` ORDER BY "time" DESC LIMIT ${limit}`
+        query += ` ORDER BY "time" DESC LIMIT ${limit}`;
     }
     return query;
 }
