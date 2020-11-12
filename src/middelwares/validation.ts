@@ -3,9 +3,9 @@ import { Request, Response, NextFunction } from 'express';
 
 export const validationParamsData = (req: Request, res: Response, next: NextFunction) => {
 
-     if(!req.query.fromDate || !req.query.toDate || !req.query.user) {
+     if(!req.query.fromDate || !req.query.toDate || !req.query.user || !req.query.aggregateMinutes) {
           return res.status(403).json({
-               msg: "Los parámetros 'fromDate, 'toDate' y 'user' son requeridos"
+               msg: "Los parámetros 'fromDate, 'toDate', 'user' y 'aggregateMinutes' son requeridos"
           });
      }
      next();

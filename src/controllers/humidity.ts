@@ -7,10 +7,11 @@ export const dataHumidity = (req: Request, res: Response ) => {
      const fromDate = req.query.fromDate;
      const toDate = req.query.toDate;
      const user = req.query.user;
+     const aggregateMinutes = req.query.aggregateMinutes;
 
      const instance = new InfluxDBService();
 
-     instance.getHumidityData(user as string, fromDate as string, toDate as string).then(((data: HumidityDataResponse[]) => {
+     instance.getHumidityData(user as string, fromDate as string, toDate as string, undefined, aggregateMinutes as string).then(((data: HumidityDataResponse[]) => {
 
           try {
                res.json(data.map((dataItem: any) => ({

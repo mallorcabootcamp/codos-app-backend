@@ -7,11 +7,12 @@ export const dataTemperature = (req: Request, res: Response ) => {
      const fromDate = req.query.fromDate;
      const toDate = req.query.toDate;
      const user = req.query.user;
-     const limit = req.query.limit;
+     const aggregateMinutes = req.query.aggregateMinutes;
+     
 
      const instance = new InfluxDBService();
 
-     instance.getTemperatureData(user as string, fromDate as string, toDate as string).then(((data: TemperatureDataResponse[]) => {
+     instance.getTemperatureData(user as string, fromDate as string, toDate as string, undefined, aggregateMinutes as string).then(((data: TemperatureDataResponse[]) => {
 
           try {
                res.json(data.map((dataItem: any) => ({
