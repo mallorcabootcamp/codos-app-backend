@@ -1,23 +1,23 @@
-import  { Request, Response } from 'express';
-import { InfluxDBService, TemperatureDataResponse } from '../influxDBService/influxDBService';
+import { Request, Response } from 'express';
+import { InfluxDBService, dataResponse } from '../influxDBService/influxDBService';
 import moment from 'moment';
 
-export const dataTemperature = (req: Request, res: Response ) => {
+export const userPeriodData = (req: Request, res: Response) => {
 
      const fromDate = req.query.fromDate;
      const toDate = req.query.toDate;
      const user = req.query.user;
      const aggregateTimeScale = req.query.aggregateTimeScale;
+     const dataToGet = req.query.dataToGet;
      
 
      const instance = new InfluxDBService();
 
-     instance.getTemperatureData(user as string, fromDate as string, toDate as string, undefined, aggregateTimeScale as string).then(((data: TemperatureDataResponse[]) => {
-
+     instance.getUserPeriodData(user as string, fromDate as string, toDate as string, aggregateTimeScale as string, dataToGet as string).then(((data: dataResponse[]) => {
           try {
                res.json(data.map((dataItem: any) => ({
-                    time: Math.round(moment(dataItem.time).valueOf()/1000).toString(),
-                    value: dataItem.temperature
+                    time: Math.round(moment(dataItem[0]).valueOf()/1000).toString(),
+                    value: dataItem[1]
                })));
 
           } catch (error) {
