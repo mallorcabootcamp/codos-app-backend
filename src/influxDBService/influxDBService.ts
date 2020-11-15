@@ -32,26 +32,26 @@ export class InfluxDBService {
 
     constructor() { }
 
-    async getCo2Data(user: string, fromDate?: string, toDate?: string, limit?: number, aggregateMinutes?: string): Promise<Co2DataResponse[]> {
-        return this.getData(user, fromDate, toDate, limit, aggregateMinutes).then((data: DataResponse[]) => data.map(({ time, co2 }: DataResponse) => ({ time, co2 })));
+    async getCo2Data(user: string, fromDate?: string, toDate?: string, limit?: number, aggregateTimeScale?: string): Promise<Co2DataResponse[]> {
+        return this.getData(user, fromDate, toDate, limit, aggregateTimeScale).then((data: DataResponse[]) => data.map(({ time, co2 }: DataResponse) => ({ time, co2 })));
     }
 
-    async getTemperatureData(user: string, fromDate?: string, toDate?: string, limit?: number, aggregateMinutes?: string): Promise<TemperatureDataResponse[]> {
-        return this.getData(user, fromDate, toDate, limit, aggregateMinutes).then((data: DataResponse[]) => data.map(({ time, temperature }: DataResponse) => ({ time, temperature })));
+    async getTemperatureData(user: string, fromDate?: string, toDate?: string, limit?: number, aggregateTimeScale?: string): Promise<TemperatureDataResponse[]> {
+        return this.getData(user, fromDate, toDate, limit, aggregateTimeScale).then((data: DataResponse[]) => data.map(({ time, temperature }: DataResponse) => ({ time, temperature })));
     }
 
-    async getHumidityData(user: string, fromDate?: string, toDate?: string, limit?: number, aggregateMinutes?: string): Promise<HumidityDataResponse[]> {
-        return this.getData(user, fromDate, toDate, limit, aggregateMinutes).then((data: DataResponse[]) => data.map(({ time, rh }: DataResponse) => ({ time, humidity: rh })));
+    async getHumidityData(user: string, fromDate?: string, toDate?: string, limit?: number, aggregateTimeScale?: string): Promise<HumidityDataResponse[]> {
+        return this.getData(user, fromDate, toDate, limit, aggregateTimeScale).then((data: DataResponse[]) => data.map(({ time, rh }: DataResponse) => ({ time, humidity: rh })));
     }
 
-    private getData(user: string, fromDate?: string, toDate?: string, limit?: number, aggregateMinutes?: string): Promise<DataResponse[]> {
+    private getData(user: string, fromDate?: string, toDate?: string, limit?: number, aggregateTimeScale?: string): Promise<DataResponse[]> {
         console.log(user);
         return axios({
             method: 'GET',
             url: url,
             timeout: 1000,
             params: {
-                q: getQuery(user, fromDate, toDate, limit, aggregateMinutes),
+                q: getQuery(user, fromDate, toDate, limit, aggregateTimeScale),
                 db: db
             },
             headers: { 'Authorization': token }
@@ -79,8 +79,8 @@ export class InfluxDBService {
 
 }
 
-const getQuery = (user: string, fromDate?: string, toDate?: string, limit?: number, aggregateMinutes?: string) => {
-    const getRangeOfData = `SELECT MEAN(*) FROM "${user}" where time >=${fromDate}s and time <${toDate}s group by time(${aggregateMinutes}) ORDER BY "time" DESC`;
+const getQuery = (user: string, fromDate?: string, toDate?: string, limit?: number, aggregateTimeScale?: string) => {
+    const getRangeOfData = `SELECT MEAN(*) FROM "${user}" where time >=${fromDate}s and time <${toDate}s group by time(${aggregateTimeScale}) ORDER BY "time" DESC`;
     const getCurrentData = `SELECT * FROM "${user}" ORDER BY "time" DESC LIMIT ${limit}`;
     return (fromDate && toDate) ? getRangeOfData : getCurrentData;
 }
