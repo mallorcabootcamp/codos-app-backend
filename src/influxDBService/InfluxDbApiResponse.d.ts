@@ -7,7 +7,5 @@ interface InfluxDbApiResponseResults {
 }
 
 interface InfluxDbApiResponseSeries {
-    name: string;
-    columns: string[]
-    values: any[][]
+    values: number
 }

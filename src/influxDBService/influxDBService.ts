@@ -21,6 +21,10 @@ export class InfluxDBService {
         return this.makeInfluxDbRequest(getQueryCurrentData(user, dataToGet))
     }
 
+    async getUsers() {
+        return this.makeInfluxDbRequest(getQueryUsers());
+    }
+
     private makeInfluxDbRequest(query: string) {
         return axios({
             method: 'GET',
@@ -48,3 +52,6 @@ const getQueryCurrentData = (user: string, dataToGet: string) => {
     return `SELECT LAST("${dataToGet}") FROM "${user}"`;
 }
 
+const getQueryUsers = () => {
+    return 'SHOW MEASUREMENTS';
+}

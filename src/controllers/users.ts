@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
-import { config } from '../config'
+import { InfluxDBService } from '../influxDBService/influxDBService';
+
 
 export const users = (req: Request, res: Response) => {
 
-     const userslist: any = config.userslist;
+     const instance = new InfluxDBService();
 
+     instance.getUsers().then(((data: any): void => {
           try {
-              res.json({
-                   users: userslist
-              })
+               res.json(new Array().concat(...data))
 
           } catch (error) {
                console.log('ERROR: ', error);
@@ -17,6 +17,7 @@ export const users = (req: Request, res: Response) => {
                     msg: 'Error de servidor'
                });
           }
-     
-};
+
+     }))
+}
 
