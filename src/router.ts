@@ -6,6 +6,6 @@ import { users } from './controllers/users';
 
 export const router = Router();
 
-router.get( '/period/data', validationParamsData, userPeriodData );
-router.get( '/current/data', validationParamsCurrent, userCurrentData );
+router.get( '/data/period', validationParamsData, userPeriodData );
+router.get( '/data/current', validationParamsCurrent, userCurrentData );
 router.get('/users', users);

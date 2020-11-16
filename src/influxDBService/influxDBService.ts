@@ -14,19 +14,19 @@ export class InfluxDBService {
     constructor() { }
 
     async getUserPeriodData(user: string, fromDate: string, toDate: string, aggregateTimeScale: string, dataToGet: string): Promise<dataResponse[]> {
-        return this.callForUserPeriodData(user, fromDate, toDate, aggregateTimeScale, dataToGet)
+        return this.makeInfluxDbRequest(getQueryPeriodData(user, fromDate, toDate, aggregateTimeScale, dataToGet))
     }
 
     async getUserCurrentData(user: string, dataToGet: string): Promise<dataResponse[]> {
-        return this.callForUserCurrentData(user, dataToGet)
+        return this.makeInfluxDbRequest(getQueryCurrentData(user, dataToGet))
     }
 
-    private callForUserPeriodData(user: string, fromDate: string, toDate: string, aggregateTimeScale: string, dataToGet: string): Promise<dataResponse[]> {
+    private makeInfluxDbRequest(query: string) {
         return axios({
             method: 'GET',
             url: url,
             params: {
-                q: getQueryPeriodData(user, fromDate, toDate, aggregateTimeScale, dataToGet),
+                q: query,
                 db: db
             },
             headers: { 'Authorization': token }
@@ -38,25 +38,6 @@ export class InfluxDBService {
             }
         }, (err) => err)
     }
-
-    private callForUserCurrentData(user: string, dataToGet: string): Promise<dataResponse[]> {
-        return axios({
-            method: 'GET',
-            url: url,
-            params: {
-                q: getQueryCurrentData(user, dataToGet),
-                db: db
-            },
-            headers: { 'Authorization': token }
-        }).then(response => {
-            if (!response.data.results[0].series) {
-                return [];
-            } else {
-                return (response.data as InfluxDbApiResponse).results[0].series[0].values
-            }
-        }, (err) => err)
-    }
-
 }
 
 const getQueryPeriodData = (user: string, fromDate: string, toDate: string, aggregateTimeScale: string, dataToGet: string) => {
