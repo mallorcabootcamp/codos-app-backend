@@ -1,10 +1,13 @@
 import axios from 'axios';
 import { InfluxDbApiResponse } from './InfluxDbApiResponse';
+import debug from 'debug';
+
 
 const url: string | undefined = process.env.INFLUX_URL;
 const token: string | undefined = process.env.INFLUX_TOKEN;
 const db: string | undefined = process.env.INFLUX_DB;
 
+const log = debug("app:influxDBService")
 export interface dataResponse {
     time: string;
     value: number;
@@ -25,7 +28,9 @@ export class InfluxDBService {
         return this.makeInfluxDbRequest(getQueryUsers());
     }
 
+
     private makeInfluxDbRequest(query: string) {
+        log("getting influxDB data");
         return axios({
             method: 'GET',
             url: url,
@@ -35,6 +40,7 @@ export class InfluxDBService {
             },
             headers: { 'Authorization': token }
         }).then(response => {
+            log("returning influxDB data");
             if (!response.data.results[0].series) {
                 return [];
             } else {
@@ -49,9 +55,13 @@ const getQueryPeriodData = (user: string, fromDate: string, toDate: string, aggr
 }
 
 const getQueryCurrentData = (user: string, dataToGet: string) => {
+    log("builging query for param 'q'");
     return `SELECT LAST("${dataToGet}") FROM "${user}"`;
 }
 
 const getQueryUsers = () => {
+    log("builging query for param 'q'");
     return 'SHOW MEASUREMENTS';
 }
+
+
