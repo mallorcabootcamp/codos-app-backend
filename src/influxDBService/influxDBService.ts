@@ -1,11 +1,14 @@
 
 import axios from 'axios';
 import { InfluxDbApiResponse } from './InfluxDbApiResponse';
+import debug from 'debug';
+
 
 const url: string | undefined = process.env.INFLUX_URL;
 const token: string | undefined = process.env.INFLUX_TOKEN;
 const db: string | undefined = process.env.INFLUX_DB;
 
+const log = debug("app:influxDBService")
 
 export interface DataResponse {
     time: string,
@@ -46,11 +49,12 @@ export class InfluxDBService {
     }
 
     private getData(user: string, fromDate?: string, toDate?: string, limit?: number): Promise<DataResponse[]> {
-        console.log(user);
+
+        log("getting influxDB data");
+
         return axios({
             method: 'GET',
             url: url,
-            timeout: 1000,
             params: {
                 q: getQuery(user, fromDate, toDate, limit),
                 db: db
@@ -69,6 +73,9 @@ export class InfluxDBService {
                 })
             }
         }).then((data: any[]) => {
+
+            log("returning influxDB data");
+
             return data.map((dataItem: any) => ({
                 time: dataItem.time,
                 co2: dataItem['eCO2[ppm]'],
@@ -81,6 +88,9 @@ export class InfluxDBService {
 }
 
 const getQuery = (user: string, fromDate?: string, toDate?: string, limit?: number) => {
+
+    log("builging query for param 'q'");
+
     let query = `SELECT * FROM "${user}"`;
     if(fromDate && toDate) {
         query += ` where time >=${fromDate}s and time <${toDate}s ORDER BY "time" DESC`
