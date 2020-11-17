@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import { InfluxDbApiResponse } from './InfluxDbApiResponse';
 import debug from 'debug';
@@ -9,94 +8,60 @@ const token: string | undefined = process.env.INFLUX_TOKEN;
 const db: string | undefined = process.env.INFLUX_DB;
 
 const log = debug("app:influxDBService")
-
-export interface DataResponse {
-    time: string,
-    co2: number,
-    rh: number,
-    temperature: number
-}
-
-export interface Co2DataResponse {
+export interface dataResponse {
     time: string;
-    co2: number;
-}
-
-export interface TemperatureDataResponse {
-    time: string;
-    temperature: number;
-}
-
-export interface HumidityDataResponse {
-    time: string;
-    humidity: number;
+    value: number;
 }
 
 export class InfluxDBService {
-
     constructor() { }
 
-    async getCo2Data(user: string, fromDate?: string, toDate?: string, limit?: number): Promise<Co2DataResponse[]> {
-        return this.getData(user, fromDate, toDate, limit).then((data: DataResponse[]) => data.map(({ time, co2 }: DataResponse) => ({ time, co2 })));
+    async getUserPeriodData(user: string, fromDate: string, toDate: string, aggregateTimeScale: string, dataToGet: string): Promise<dataResponse[]> {
+        return this.makeInfluxDbRequest(getQueryPeriodData(user, fromDate, toDate, aggregateTimeScale, dataToGet))
     }
 
-    async getTemperatureData(user: string, fromDate?: string, toDate?: string, limit?: number): Promise<TemperatureDataResponse[]> {
-        return this.getData(user, fromDate, toDate, limit).then((data: DataResponse[]) => data.map(({ time, temperature }: DataResponse) => ({ time, temperature })));
+    async getUserCurrentData(user: string, dataToGet: string): Promise<dataResponse[]> {
+        return this.makeInfluxDbRequest(getQueryCurrentData(user, dataToGet))
     }
 
-    async getHumidityData(user: string, fromDate?: string, toDate?: string, limit?: number): Promise<HumidityDataResponse[]> {
-        return this.getData(user, fromDate, toDate, limit).then((data: DataResponse[]) => data.map(({ time, rh }: DataResponse) => ({ time, humidity: rh })));
+    async getUsers() {
+        return this.makeInfluxDbRequest(getQueryUsers());
     }
 
-    private getData(user: string, fromDate?: string, toDate?: string, limit?: number): Promise<DataResponse[]> {
 
+    private makeInfluxDbRequest(query: string) {
         log("getting influxDB data");
-
         return axios({
             method: 'GET',
             url: url,
             params: {
-                q: getQuery(user, fromDate, toDate, limit),
+                q: query,
                 db: db
             },
             headers: { 'Authorization': token }
         }).then(response => {
-            if(!response.data.results[0].series) {
+            log("returning influxDB data");
+            if (!response.data.results[0].series) {
                 return [];
             } else {
-                const columns = (response.data as InfluxDbApiResponse).results[0].series[0].columns
-                return (response.data as InfluxDbApiResponse).results[0].series[0].values.map(value => {
-                    return value.reduce((acc, val, idx) => {
-                        acc[columns[idx]] = val;
-                        return acc;
-                    }, {})
-                })
+                return (response.data as InfluxDbApiResponse).results[0].series[0].values
             }
-        }).then((data: any[]) => {
-
-            log("returning influxDB data");
-
-            return data.map((dataItem: any) => ({
-                time: dataItem.time,
-                co2: dataItem['eCO2[ppm]'],
-                rh: dataItem['rH[o/o]'],
-                temperature: dataItem['T[°C]']
-            }))
-        })
+        }, (err) => err)
     }
-
 }
 
-const getQuery = (user: string, fromDate?: string, toDate?: string, limit?: number) => {
+const getQueryPeriodData = (user: string, fromDate: string, toDate: string, aggregateTimeScale: string, dataToGet: string) => {
+    return `SELECT MEAN("${dataToGet}") FROM "${user}" where time >=${fromDate}s and time <${toDate}s group by time(${aggregateTimeScale}) ORDER BY "time" DESC`;
+}
 
+const getQueryCurrentData = (user: string, dataToGet: string) => {
     log("builging query for param 'q'");
-
-    let query = `SELECT * FROM "${user}"`;
-    if(fromDate && toDate) {
-        query += ` where time >=${fromDate}s and time <${toDate}s ORDER BY "time" DESC`
-    }
-    if(limit) {
-        query += ` ORDER BY "time" DESC LIMIT ${limit}`
-    }
-    return query;
+    return `SELECT LAST("${dataToGet}") FROM "${user}"`;
 }
+
+const getQueryUsers = () => {
+    log("builging query for param 'q'");
+    return 'SHOW MEASUREMENTS';
+}
+
+

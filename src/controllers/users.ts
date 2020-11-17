@@ -1,5 +1,5 @@
+import { InfluxDBService } from '../influxDBService/influxDBService';
 import { NextFunction, Request, Response } from 'express';
-import { config } from '../config'
 import debug from 'debug';
 
 const log = debug("app:controller:users");
@@ -8,16 +8,13 @@ export const users = (req: Request, res: Response, next: NextFunction) => {
 
      log("getting users data");
 
-     const userslist: any = config.userslist;
+     const instance = new InfluxDBService();
 
+     instance.getUsers().then(((data: any): void => {
           try {
-
-               log("receiving users data");
-
-              res.json({
-                   users: userslist
-              })
-
+               log(`receiving users data`);
+               res.json(new Array().concat(...data))
+               log("exit controller");
           } catch (error) {
                log('ERROR: ', error);
                res.status(500).json({
@@ -25,8 +22,8 @@ export const users = (req: Request, res: Response, next: NextFunction) => {
                     msg: 'Error de servidor'
                });
           }
-
           next();
-     
-};
+     })) 
+}
+
 
