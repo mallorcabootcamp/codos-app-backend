@@ -5,7 +5,7 @@ export const validationParamsData = (req: Request, res: Response, next: NextFunc
 
      if(!req.query.fromDate || !req.query.toDate || !req.query.user || !req.query.aggregateTimeScale || !req.query.dataToGet) {
           return res.status(403).json({
-               msg: "Los parámetros 'fromDate, 'toDate', 'user', 'aggregateTimeScale' y 'dataToGet' son requeridos"
+               msg: "Los parámetros 'fromDate', 'toDate', 'user', 'aggregateTimeScale' y 'dataToGet' son requeridos"
           });
      }
      next();
