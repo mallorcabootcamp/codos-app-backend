@@ -4,6 +4,10 @@ import moment from 'moment';
 import { switchDataToGet } from '../utils/switchDataToGet';
 import debug from 'debug';
 
+const mockCo2 = require('../mockData/mockPeriodCo2.json')
+const mockHumidity = require('../mockData/mockPeriodHumidity.json')
+const mockTemperature = require('../mockData/mockPeriodTemperature.json')
+
 const log = debug("app:controller:userPeriodData")
 
 export const userPeriodData = (req: Request, res: Response, next: NextFunction) => {
@@ -26,6 +30,10 @@ export const userPeriodData = (req: Request, res: Response, next: NextFunction) 
                     time: Math.round(moment(dataItem[0]).valueOf() / 1000).toString(),
                     value: dataItem[1]
                })));
+
+               // if (dataToGet === 'co2') res.json(mockCo2);
+               // else if (dataToGet === 'temperature') res.json(mockTemperature);
+               // else if (dataToGet === 'humidity') res.json(mockHumidity);
                log("exit controller");
           } catch (error) {
                log("ERROR: ", error);

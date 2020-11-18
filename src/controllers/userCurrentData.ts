@@ -3,6 +3,9 @@ import { InfluxDBService, dataResponse } from '../influxDBService/influxDBServic
 import moment from 'moment';
 import { switchDataToGet } from '../utils/switchDataToGet';
 import debug from 'debug';
+import * as mockCo2 from '../mockData/mockCurrentCo2.json';
+import * as mockHumidity from '../mockData/mockCurrentHumidity.json';
+import * as mockTemperature from '../mockData/mockCurrentTemperature.json';
 
 const log = debug("app:controller:userCurrentData")
 
@@ -22,6 +25,11 @@ export const userCurrentData = (req: Request, res: Response, next: NextFunction)
                     time: Math.round(moment(dataItem[0]).valueOf() / 1000).toString(),
                     value: dataItem[1]
                })));
+               
+               // if (dataToGet === 'co2') res.json(mockCo2);
+               // else if (dataToGet === 'temperature') res.json(mockHumidity);
+               // else if (dataToGet === 'humidity') res.json(mockTemperature);
+               
                log("exit controller");
           } catch (error) {
                log("ERROR: ", error);
