@@ -25,7 +25,7 @@ export const userCurrentData = (req: Request, res: Response, next: NextFunction)
                     time: Math.round(moment(dataItem[0]).valueOf() / 1000).toString(),
                     value: dataItem[1]
                })));
-               
+               //                  ##MOCK DATA##
                // if (dataToGet === 'co2') res.json(mockCo2);
                // else if (dataToGet === 'temperature') res.json(mockHumidity);
                // else if (dataToGet === 'humidity') res.json(mockTemperature);

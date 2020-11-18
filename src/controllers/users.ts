@@ -16,6 +16,8 @@ export const users = (req: Request, res: Response, next: NextFunction) => {
                log(`receiving users data`);
 
                res.json(new Array().concat(...data))
+               
+               //                  ##MOCK DATA##
                // res.json(mockUser)
 
                log("exit controller");
