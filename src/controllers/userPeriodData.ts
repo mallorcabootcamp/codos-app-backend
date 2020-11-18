@@ -30,7 +30,7 @@ export const userPeriodData = (req: Request, res: Response, next: NextFunction) 
                     time: Math.round(moment(dataItem[0]).valueOf() / 1000).toString(),
                     value: dataItem[1]
                })));
-
+               debugger
                // if (dataToGet === 'co2') res.json(mockCo2);
                // else if (dataToGet === 'temperature') res.json(mockTemperature);
                // else if (dataToGet === 'humidity') res.json(mockHumidity);

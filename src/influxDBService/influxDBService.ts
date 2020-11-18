@@ -46,7 +46,7 @@ export class InfluxDBService {
             } else {
                 return (response.data as InfluxDbApiResponse).results[0].series[0].values
             }
-        }, (err) => err)
+        }).catch(error => error);
     }
 }
 
