@@ -3,10 +3,10 @@ import { InfluxDBService, dataResponse } from '../influxDBService/influxDBServic
 import moment from 'moment';
 import { switchDataToGet } from '../utils/switchDataToGet';
 import debug from 'debug';
-
-const mockCo2 = require('../mockData/mockPeriodCo2.json')
-const mockHumidity = require('../mockData/mockPeriodHumidity.json')
-const mockTemperature = require('../mockData/mockPeriodTemperature.json')
+//                  ##MOCK DATA##
+// const mockCo2 = require('../mockData/mockPeriodCo2.json')
+// const mockHumidity = require('../mockData/mockPeriodHumidity.json')
+// const mockTemperature = require('../mockData/mockPeriodTemperature.json')
 
 const log = debug("app:controller:userPeriodData")
 

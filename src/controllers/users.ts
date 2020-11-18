@@ -1,7 +1,8 @@
 import { InfluxDBService } from '../influxDBService/influxDBService';
 import { NextFunction, Request, Response } from 'express';
 import debug from 'debug';
-const mockUser = require('../mockData/mockUser.json')
+//                  ##MOCK DATA##
+// const mockUser = require('../mockData/mockUser.json')
 
 const log = debug("app:controller:users");
 
@@ -16,7 +17,7 @@ export const users = (req: Request, res: Response, next: NextFunction) => {
                log(`receiving users data`);
 
                res.json(new Array().concat(...data))
-               
+
                //                  ##MOCK DATA##
                // res.json(mockUser)
 
