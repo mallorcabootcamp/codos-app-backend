@@ -22,11 +22,11 @@ export const userPeriodData = (req: Request, res: Response, next: NextFunction) 
 
      const instance = new InfluxDBService();
 
-     instance.getUserPeriodData(user as string, fromDate as string, toDate as string, aggregateTimeScale as string, switchDataToGet(user as string, dataToGet as string)).then(((data: dataResponse[]):void => {
+     instance.getUserPeriodData(user as string, fromDate as string, toDate as string, aggregateTimeScale as string, switchDataToGet(user as string, dataToGet as string)).then(((data) => {
           try {
                log(`receiving ${dataToGet} data`);
 
-               res.json(data.map((dataItem: any): dataResponse => ({
+               res.json(data.map((dataItem) => ({
                     time: Math.round(moment(dataItem[0]).valueOf() / 1000).toString(),
                     value: dataItem[1]
                })));

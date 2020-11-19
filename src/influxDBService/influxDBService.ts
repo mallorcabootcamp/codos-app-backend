@@ -8,23 +8,18 @@ const token: string | undefined = process.env.INFLUX_TOKEN;
 const db: string | undefined = process.env.INFLUX_DB;
 
 const log = debug("app:influxDBService")
-export interface dataResponse {
-    time: string;
-    value: number;
-}
-
 export class InfluxDBService {
     constructor() { }
 
-    async getUserPeriodData(user: string, fromDate: string, toDate: string, aggregateTimeScale: string, dataToGet: string): Promise<dataResponse[]> {
+    async getUserPeriodData(user: string, fromDate: string, toDate: string, aggregateTimeScale: string, dataToGet: string): Promise<[string, number][]> {
         return this.makeInfluxDbRequest(getQueryPeriodData(user, fromDate, toDate, aggregateTimeScale, dataToGet))
     }
 
-    async getUserCurrentData(user: string, dataToGet: string): Promise<dataResponse[]> {
+    async getUserCurrentData(user: string, dataToGet: string): Promise<[string, number][]> {
         return this.makeInfluxDbRequest(getQueryCurrentData(user, dataToGet))
     }
 
-    async getUsers() {
+    async getUsers(): Promise<string[]> {
         return this.makeInfluxDbRequest(getQueryUsers());
     }
 

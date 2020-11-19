@@ -12,7 +12,7 @@ export const users = (req: Request, res: Response, next: NextFunction) => {
 
      const instance = new InfluxDBService();
 
-     instance.getUsers().then(((data: any): void => {
+     instance.getUsers().then(((data): void => {
           try {
                log(`receiving users data`);
 
