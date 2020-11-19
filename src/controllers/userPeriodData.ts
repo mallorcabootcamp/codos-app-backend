@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { InfluxDBService, dataResponse } from '../influxDBService/influxDBService';
+import { InfluxDBService } from '../influxDBService/influxDBService';
 import moment from 'moment';
 import { switchDataToGet } from '../utils/switchDataToGet';
 import debug from 'debug';
