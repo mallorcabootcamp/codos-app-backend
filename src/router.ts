@@ -13,7 +13,7 @@ const endRoute = () => {
 
 export const router = Router();
 
-router.get( '/data/period', validationParamsData, userPeriodData, endRoute );
-router.get( '/data/current', validationParamsCurrent, userCurrentData, endRoute );
+router.get('/data/period', validationParamsData, userPeriodData, endRoute);
+router.get('/data/current', validationParamsCurrent, userCurrentData, endRoute);
 router.get('/users', users, endRoute);
 

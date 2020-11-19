@@ -6,6 +6,7 @@ import debug from 'debug';
 const url: string | undefined = process.env.INFLUX_URL;
 const token: string | undefined = process.env.INFLUX_TOKEN;
 const db: string | undefined = process.env.INFLUX_DB;
+const mockData = process.env.MOCK_DATA;
 
 const log = debug("app:influxDBService")
 export class InfluxDBService {
