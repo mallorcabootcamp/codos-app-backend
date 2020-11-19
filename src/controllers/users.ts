@@ -4,13 +4,13 @@ import debug from 'debug';
 
 
 const log = debug("app:controller:users");
-const mockData = process.env.MOCK_DATA;
+const mockData = process.env['MOCK_DATA'];
 
 export const users = (req: Request, res: Response, next: NextFunction) => {
 
      log("getting users data");
 
-     if (mockData === "true") {
+     if (mockData === 'true') {
           const mockUser = require('../mockData/mockUser.json')
           res.json(mockUser);
      } else {

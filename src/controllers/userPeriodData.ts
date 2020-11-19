@@ -5,7 +5,7 @@ import { switchDataToGet } from '../utils/switchDataToGet';
 import debug from 'debug';
 
 const log = debug("app:controller:userPeriodData")
-const mockData = process.env.MOCK_DATA;
+const mockData = process.env['MOCK_DATA'];
 
 export const userPeriodData = (req: Request, res: Response, next: NextFunction) => {
 
@@ -18,7 +18,7 @@ export const userPeriodData = (req: Request, res: Response, next: NextFunction) 
 
 
      log(`getting ${dataToGet} data`);
-     if (mockData === "true") {
+     if (mockData === 'true') {
           const mockCo2 = require('../mockData/mockPeriodCo2.json');
           const mockHumidity = require('../mockData/mockPeriodHumidity.json');
           const mockTemperature = require('../mockData/mockPeriodTemperature.json');
